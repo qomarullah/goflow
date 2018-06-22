@@ -1,69 +1,13 @@
 #### Synopsis
 
-GoDB provides convenient API to query from any DB and with custom SQL and parameter, built with golang (beego)
+GoFlow is platform for building custom ordering flow based on predefined format XML and JSON
 
-#### API Example
-  ```
-  curl -X GET "http://localhost:8080/v1/query/select?ds=localhost&sqlid=user" -H "accept: application/json"
-  ```
-  ##### Configuration App.conf
-  ```
-  #ds
-  ds.localhost= "apps:aplikasi@tcp(localhost:3306)/test|mysql|10|10|120000"
-  sqlid.user="SELECT * from `user` limit 10"
-  ```
+#### What Already and Yet
+ 1. Read and parse json
+ 2. Call function by name from json 
   
-  ```
-  result:
- {
-  "count": 10,
-  "data": [
-    {
-      "email": "slene",
-      "id": "1",
-      "name": "testing"
-    },
-    {
-      "email": "someemail@someemailprovider.com",
-      "id": "2",
-      "name": "First"
-    },
-    {
-      "email": "someemail@someemailprovider.com",
-      "id": "3",
-      "name": "First"
-    }
-    ....
-  ],
-  "desc": "-",
-  "status": false
-}
-```
-```
-curl -X GET "http://localhost:8080/v1/query/select?ds=localhost2&sqlid=user2&id=1" -H "accept: application/json"
-```
-#### Configuration App.conf
-```
-ds.localhost2= "apps:aplikasi@tcp(localhost:3306)/mfs|mysql|10|10|120000"
-sqlid.user2="SELECT * from `user` where id=[id]"
-```
-```
-Result
-{
-  "count": 1,
-  "data": [
-    {
-      "email": "slene",
-      "id": "1",
-      "name": "testing"
-    }
-  ],
-  "desc": "-",
-  "success": true
-}
-```
 
-#### Installation or Development
+#### Installation and Development
 
 1. install golang
 2. clone this project
