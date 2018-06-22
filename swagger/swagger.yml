@@ -1,0 +1,96 @@
+swagger: "2.0"
+info:
+  title: beego Test API
+  description: beego has a very cool tools to autogenerate documents for your API
+  version: 1.0.0
+  termsOfService: http://beego.me/
+  contact:
+    email: astaxie@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+basePath: /v1
+paths:
+  /goflow/services:
+    get:
+      tags:
+      - goflow
+      description: service flow from config
+      operationId: ServicesController.Query Services
+      parameters:
+      - in: query
+        name: id
+        description: Service flow id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string} success'
+        "403":
+          description: data not found
+  /query/select:
+    get:
+      tags:
+      - query
+      description: query from config
+      operationId: QueryController.Query Select
+      parameters:
+      - in: query
+        name: ds
+        description: Datasource from config
+        required: true
+        type: string
+      - in: query
+        name: sqlid
+        description: SQL id predefine from config
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string} success'
+        "403":
+          description: data not found
+definitions:
+  models.Object:
+    title: Object
+    type: object
+    properties:
+      ObjectId:
+        type: string
+      PlayerName:
+        type: string
+      Score:
+        type: integer
+        format: int64
+  models.Profile:
+    title: Profile
+    type: object
+    properties:
+      Address:
+        type: string
+      Age:
+        type: integer
+        format: int64
+      Email:
+        type: string
+      Gender:
+        type: string
+  models.User:
+    title: User
+    type: object
+    properties:
+      Id:
+        type: string
+      Password:
+        type: string
+      Profile:
+        $ref: '#/definitions/models.Profile'
+      Username:
+        type: string
+tags:
+- name: query
+  description: |
+    Operations about query
+- name: goflow
+  description: |
+    Operations about service
