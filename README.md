@@ -2,10 +2,14 @@
 
 GoFlow is platform for building custom ordering flow based on predefined format XML and JSON
 
-#### What Already and Yet
- 1. Read and parse json
+#### What Already and Not Yet
+ 1. Read and parse JSON
  2. Call function by name from json 
-  
+ 3. Define If , break, loop function => not yet
+ 4. Read and parse XML => not yet
+ 5. Define more function => not yet
+ - db
+ - http
 
 #### Installation and Development
 
