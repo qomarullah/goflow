@@ -11,23 +11,6 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /v1
 paths:
-  /goflow/services:
-    get:
-      tags:
-      - goflow
-      description: service flow from config
-      operationId: ServicesController.Query Services
-      parameters:
-      - in: query
-        name: id
-        description: Service flow id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{string} success'
-        "403":
-          description: data not found
   /query/select:
     get:
       tags:

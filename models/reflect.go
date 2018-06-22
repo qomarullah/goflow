@@ -1,49 +1,49 @@
 package models
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
 	"reflect"
 )
 
-func Call(m map[string]interface{}, name string, params ...interface{}) (result []reflect.Value, err error) {
-	f := reflect.ValueOf(m[name])
-	if len(params) != f.Type().NumIn() {
-		err = errors.New("The number of params is not adapted.")
-		return
-	}
-	in := make([]reflect.Value, len(params))
-	for k, param := range params {
-		in[k] = reflect.ValueOf(param)
-	}
-	result = f.Call(in)
-	return
-}
-
 type Result struct {
-	Status string
-	Code   string
-	Msg    string
+	Status     string
+	ResultCode string
+	Msg        interface{}
 }
 
-func Exec(payload interface{}) Result {
-	//reflection
-	funcs := map[string]interface{}{
-		"foo": foo,
-		"bar": bar,
-		"add": add,
-		"sub": sub,
+func Invoke(m interface{}, name string, params ...interface{}) (result []reflect.Value, err error) {
+
+	f := reflect.ValueOf(m)
+
+	inputs := make([]reflect.Value, len(params))
+	/*for i, _ := range params {
+		inputs[i] = reflect.ValueOf(params[i])
+	}
+	*/
+	result = f.MethodByName(name).Call(inputs)
+	fmt.Println(result)
+	return
+
+}
+func Exec(task []byte) Result {
+
+	req := Fields{}
+	json.Unmarshal(task, &req)
+	//fmt.Println(req)
+	//fmt.Println(req.Fn)
+
+	out := Result{"Failed", "1", "ok"}
+	x, err := Invoke(req, req.Fn)
+	if err != nil {
+		out.Msg = err.Error()
+		fmt.Println("failed", out.Msg)
+		return out
 	}
 
-	arr := payload.(map[string]interface{})
-	fmt.Println("===>", arr["fn"])
-	fmt.Println("===>", arr["param1"])
-	fmt.Println("===>", arr["param2"])
-
-	x, _ := Call(funcs, arr["fn"].(string), arr["param1"], arr["param2"])
 	y := reflect.ValueOf(x).Interface().([]reflect.Value)
-	z := y[0].Interface().(string)
+	z := y[0].Interface()
 
-	out := Result{"Success", "1", z}
+	out = Result{"Success", "1", z}
 	return out
 }

@@ -22,6 +22,7 @@ type ServicesController struct {
 // @Success 200 {string} success
 // @Failure 403 data not found
 // @router /services [get]
+
 func (q *ServicesController) Services() {
 	id := q.GetString("id")
 
@@ -43,12 +44,6 @@ func (q *ServicesController) Services() {
 		resp = make(map[string]interface{})
 	}
 
-	resp["count"] = 0
-	resp["desc"] = "-"
-	resp["success"] = false
-	var xdata []map[string]string
-	resp["data"] = xdata
-
 	//final flow
 	fmt.Println("flow:", flow)
 	resp["data"] = flow
@@ -60,14 +55,6 @@ func (q *ServicesController) Services() {
 		return
 	}
 
-	/*str := `{"page": 1, "fruits": ["apple", "peach"]}`
-	serv := jsonflow{}
-	json.Unmarshal([]byte(str), &serv)
-	fmt.Println(serv)
-	fmt.Println(serv.Nodes[0])
-	*/
-
-	//var dat map[string]interface{}
 	var f interface{}
 	byt := []byte(flow)
 	if err := json.Unmarshal(byt, &f); err != nil {
@@ -75,52 +62,20 @@ func (q *ServicesController) Services() {
 	}
 	m := f.(map[string]interface{})
 	arr := m["action"].([]interface{})
-	//fmt.Println("===>", arr[0])
+
+	//default
+	out := models.Result{}
 
 	for i := 0; i < len(arr); i++ {
 		fmt.Println("array:", arr[i])
-		function := arr[i].(map[string]interface{})
-		fmt.Println("===>", function["fn"])
-
-		out := models.Exec(arr[i])
-		fmt.Println("result", out.Msg)
-
+		jsonString, _ := json.Marshal(arr[i])
+		out = models.Exec(jsonString)
+		fmt.Println("RESULT", out)
 	}
-	/*for k, v := range arr {
-		fmt.Println("array:", k, v)
-		abc := arr[0].(map[string]interface{})
-		fmt.Println("===>", abc["fn"])
 
-	}*/
-	/*for k, v := range m {
-		switch vv := v.(type) {
-		case string:
-			fmt.Println(k, "is string", vv)
-		case float64:
-			fmt.Println(k, "is float64", vv)
-		case []interface{}:
-			fmt.Println(k, "is an array:")
-			for i, u := range vv {
-				fmt.Println(i, u)
-			}
-		default:
-			fmt.Println(k, "is of a type I don't know how to handle")
-		}
-	}
-	*/
-
-	//var out models.Result
-	//out := models.Exec(flow)
-	//fmt.Println("result", out.Msg)
-
-	out := "ok"
+	//out = "ok"
 	q.Data["json"] = out
 	beego.Info(out)
 	q.ServeJSON()
 
-}
-
-type jsonflow struct {
-	Type  string        `json:"page"`
-	Nodes []interface{} `json:"fruits"`
 }
