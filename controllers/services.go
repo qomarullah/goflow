@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"goflow/models"
-
+	"io/ioutil"
 	"reflect"
 	"strings"
 
@@ -23,59 +23,111 @@ type ServicesController struct {
 // @Failure 403 data not found
 // @router /services [get]
 
+type Infos struct {
+	KeyVal []KeyVal
+}
+
+type KeyVal struct {
+	Key string
+	Val string
+}
+
 func (q *ServicesController) Services() {
 	id := q.GetString("id")
+	out := models.Result{}
 
-	//flow := `{"type":"flow","action":[{"fn":"add","param1":"[param1]","param2":"[param2]"},{"fn":"sub","param1":"[param1]","param2":"[param2]"}]}`
-	flow := beego.AppConfig.String("flow." + id)
-	fmt.Println("=======>" + flow)
-	mymap := q.Ctx.Request.URL.Query()
-	keys := reflect.ValueOf(mymap).MapKeys()
-	strkeys := make([]string, len(keys))
-
-	for i := 0; i < len(keys); i++ {
-		strkeys[i] = keys[i].String()
-		flow = strings.Replace(flow, "["+strkeys[i]+"]", mymap[strkeys[i]][0], 5)
-		fmt.Println(strkeys[i], "==>", mymap[strkeys[i]][0])
-	}
-
-	var resp map[string]interface{}
-	if resp == nil {
-		resp = make(map[string]interface{})
-	}
-
-	//final flow
-	fmt.Println("flow:", flow)
-	resp["data"] = flow
+	//var infos map[srting]string
+	infos := make(map[string]interface{})
+	infos["test"] = "ok"
+	fmt.Println("get", infos["test"])
 
 	if id == "" {
-		resp["desc"] = "config not found"
-		q.Data["json"] = resp
+		out.Status = "Failed"
+		out.ResultCode = "-1"
+		out.Msg = "ID Not Found"
+
+		q.Data["json"] = out
 		q.ServeJSON()
 		return
 	}
 
-	var f interface{}
-	byt := []byte(flow)
-	if err := json.Unmarshal(byt, &f); err != nil {
-		panic(err)
+	flowtype := beego.AppConfig.String("flow.type")
+	//Type file json
+	if flowtype == "files" {
+
+		//flow, err := getPages(id)
+		strflow, err := getPagesString(id)
+		if err != nil {
+			out.Status = "Failed"
+			out.ResultCode = "-1"
+			out.Msg = "ID Not Found"
+
+			q.Data["json"] = out
+			q.ServeJSON()
+			return
+		}
+
+		//replace predefine params
+		mymap := q.Ctx.Request.URL.Query()
+		keys := reflect.ValueOf(mymap).MapKeys()
+		strkeys := make([]string, len(keys))
+
+		fmt.Println(strflow)
+		for i := 0; i < len(keys); i++ {
+			strkeys[i] = keys[i].String()
+
+			strflow = strings.Replace(strflow, "["+strkeys[i]+"]", mymap[strkeys[i]][0], 5)
+			fmt.Println(strkeys[i], "==>", mymap[strkeys[i]][0])
+		}
+		//end
+
+		//start unmarshal
+		flow := new(Page)
+		json.Unmarshal([]byte(strflow), &flow)
+
+		for _, task := range flow.Action {
+			fmt.Println(task.ToString())
+			out = models.Exec(task, infos)
+			fmt.Println("RESULT", out)
+
+		}
 	}
-	m := f.(map[string]interface{})
-	arr := m["action"].([]interface{})
 
-	//default
-	out := models.Result{}
-
-	for i := 0; i < len(arr); i++ {
-		fmt.Println("array:", arr[i])
-		jsonString, _ := json.Marshal(arr[i])
-		out = models.Exec(jsonString)
-		fmt.Println("RESULT", out)
-	}
-
-	//out = "ok"
 	q.Data["json"] = out
-	beego.Info(out)
 	q.ServeJSON()
 
+}
+
+type Page struct {
+	Service string `json:"service"`
+	Action  []models.Fields
+}
+
+func (p Page) pageToString() string {
+	return models.ToJson(p)
+}
+
+func getPages(file string) (c Page, err error) {
+	raw, err := ioutil.ReadFile("files/" + file + ".json")
+
+	if err != nil {
+		fmt.Println(err.Error())
+		//os.Exit(1)
+		return c, err
+	}
+
+	json.Unmarshal(raw, &c)
+	return c, err
+}
+func getPagesString(file string) (c string, err error) {
+	raw, err := ioutil.ReadFile("files/" + file + ".json")
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return c, err
+	}
+
+	//json.Unmarshal(raw, &c)
+	c = string(raw)
+	return c, err
 }

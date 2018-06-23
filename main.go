@@ -14,15 +14,6 @@ func main() {
 	logFilesMaxDays := beego.AppConfig.String("LogFilesMaxDays")
 	logs.SetLogger(logs.AdapterMultiFile, `{"filename":"`+logFiles+`","separate":["error","info"],"maxdays":`+logFilesMaxDays+`}`)
 
-	logFilesEs := beego.AppConfig.String("LogFilesEs")
-	//logFilesEsLevel := beego.AppConfig.String("LogFilesEsLevel")
-	if logFilesEs != "" {
-		//logs.SetLogger(logs.AdapterEs, `{"dsn":"`+logFilesEs+`","level":`+logFilesEsLevel+`}`)
-		logs.SetLogger(logs.AdapterEs, `{"dsn":"`+logFilesEs+`","level": 1 }`)
-		//fmt.Println("==>" + logFilesEs)
-
-	}
-
 	beego.Debug("App started.")
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
@@ -30,6 +21,7 @@ func main() {
 	} else {
 		beego.BeeLogger.DelLogger("console")
 	}
+
 	beego.Run()
 
 }

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"encoding/json"
 	"fmt"
 	"reflect"
 )
@@ -26,15 +25,11 @@ func Invoke(m interface{}, name string, params ...interface{}) (result []reflect
 	return
 
 }
-func Exec(task []byte) Result {
+func Exec(task Fields, infos map[string]interface{}) Result {
 
-	req := Fields{}
-	json.Unmarshal(task, &req)
-	//fmt.Println(req)
-	//fmt.Println(req.Fn)
+	out := Result{"Failed", "1", "nothing"}
 
-	out := Result{"Failed", "1", "ok"}
-	x, err := Invoke(req, req.Fn)
+	x, err := Invoke(task, task.Fn, infos)
 	if err != nil {
 		out.Msg = err.Error()
 		fmt.Println("failed", out.Msg)
@@ -47,3 +42,7 @@ func Exec(task []byte) Result {
 	out = Result{"Success", "1", z}
 	return out
 }
+
+//func Populate(task Fields) Fields {
+
+//}

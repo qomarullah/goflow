@@ -1,0 +1,29 @@
+{
+	"action": [{
+		"fn": "Sub",
+		"param1": "[param1]",
+		"param2": "[param2]"
+	}, {
+		"fn": "Sub",
+		"param1": "[param1]",
+		"param2": "[param2]"
+	}, {
+		"fn": "If",
+		"compare": "[param1]",
+		"value": "[param2]",
+		"cont":[
+			{
+				"fn": "Sub",
+				"param1": "[param1]",
+				"param2": "[param2]"
+			},
+			{
+				"fn": "Sub",
+				"param1": "[param1]",
+				"param2": "[param2]"
+			},
+			{"cont":"break"}
+
+		]
+	}]
+}
