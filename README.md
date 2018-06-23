@@ -1,6 +1,6 @@
 #### Synopsis
 
-GoFlow is platform for building custom ordering flow based on predefined format JSON
+GoFlow is platform for build custom ordering flow based on predefined format JSON
 
 #### What Already and Not Yet
  1. Read and parse JSON from file => done
