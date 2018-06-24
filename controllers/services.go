@@ -3,9 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"goflow/models"
+	"goflow/actions"
 	"io/ioutil"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -23,28 +24,21 @@ type ServicesController struct {
 // @Failure 403 data not found
 // @router /services [get]
 
-type Infos struct {
-	KeyVal []KeyVal
-}
-
-type KeyVal struct {
-	Key string
-	Val string
-}
-
 func (q *ServicesController) Services() {
 	id := q.GetString("id")
-	out := models.Result{}
+	out := Result{}
+	out.Status = "Failed"
+	out.ResultCode = -1
+	out.ResultDesc = "Not Running"
 
-	//var infos map[srting]string
-	infos := make(map[string]interface{})
+	infos := make(map[string]string)
 	infos["test"] = "ok"
 	fmt.Println("get", infos["test"])
 
 	if id == "" {
 		out.Status = "Failed"
-		out.ResultCode = "-1"
-		out.Msg = "ID Not Found"
+		out.ResultCode = -1
+		out.ResultDesc = "Invalid Parameter"
 
 		q.Data["json"] = out
 		q.ServeJSON()
@@ -59,8 +53,8 @@ func (q *ServicesController) Services() {
 		strflow, err := getPagesString(id)
 		if err != nil {
 			out.Status = "Failed"
-			out.ResultCode = "-1"
-			out.Msg = "ID Not Found"
+			out.ResultCode = -1
+			out.ResultDesc = "ID Not Found"
 
 			q.Data["json"] = out
 			q.ServeJSON()
@@ -84,13 +78,54 @@ func (q *ServicesController) Services() {
 		//start unmarshal
 		flow := new(Page)
 		json.Unmarshal([]byte(strflow), &flow)
+		i := 0
+		//for _, field := range flow.Action {
+		task := actions.Task{}
+		task.Info = infos //set hashmap container
 
-		for _, task := range flow.Action {
-			fmt.Println(task.ToString())
-			out = models.Exec(task, infos)
-			fmt.Println("RESULT", out)
+		valid := true
+		for i = 0; i < len(flow.Action) && valid; i++ {
+
+			task.Status = 1
+			field := flow.Action[i]
+			fmt.Println(field.ToString())
+			fmt.Println("-----------------", i, "--------------------")
+
+			task = actions.Exec(i, field, task)
+
+			fmt.Println("RESULT", task, task.Status, task.Resp)
+			if task.Err != nil {
+				fmt.Println("EXIT", task.Step)
+				out.ResultCode = task.Status
+				out.ResultDesc = "task-" + strconv.Itoa(i) + "=" + task.Err.Error()
+				break
+			}
+
+			if task.Status == 1 {
+
+			} else if task.Status == 10 {
+				out.ResultDesc = "task-" + strconv.Itoa(i)
+				i = len(flow.Action)
+				out.ResultCode = task.Status
+				out.ResultDesc = "Break:" + strconv.Itoa(i)
+				out.Msg = task.Info["resp"]
+				fmt.Println("BREAK")
+
+			} else {
+				fmt.Println("EXIT", task.Step)
+				out.ResultCode = task.Status
+				out.ResultDesc = "task-" + strconv.Itoa(i) + "=" + task.Err.Error()
+				break
+			}
 
 		}
+		fmt.Println("FINISH")
+		fmt.Println("RESULT", task, task.Status, task.Resp)
+		out.Status = "Success"
+		out.ResultCode = task.Status
+		out.ResultDesc = "Finish"
+		out.Msg = task.Info["resp"]
+
 	}
 
 	q.Data["json"] = out
@@ -100,11 +135,11 @@ func (q *ServicesController) Services() {
 
 type Page struct {
 	Service string `json:"service"`
-	Action  []models.Fields
+	Action  []actions.Fields
 }
 
 func (p Page) pageToString() string {
-	return models.ToJson(p)
+	return actions.ToJson(p)
 }
 
 func getPages(file string) (c Page, err error) {
@@ -127,7 +162,13 @@ func getPagesString(file string) (c string, err error) {
 		return c, err
 	}
 
-	//json.Unmarshal(raw, &c)
 	c = string(raw)
 	return c, err
+}
+
+type Result struct {
+	Status     string
+	ResultCode int
+	ResultDesc string
+	Msg        interface{}
 }

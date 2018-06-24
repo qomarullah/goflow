@@ -1,29 +1,34 @@
-{
-	"action": [{
-		"fn": "Sub",
-		"param1": "[param1]",
-		"param2": "[param2]"
-	}, {
-		"fn": "Sub",
-		"param1": "[param1]",
-		"param2": "[param2]"
-	}, {
-		"fn": "If",
-		"compare": "[param1]",
-		"value": "[param2]",
-		"cont":[
-			{
-				"fn": "Sub",
-				"param1": "[param1]",
-				"param2": "[param2]"
-			},
-			{
-				"fn": "Sub",
-				"param1": "[param1]",
-				"param2": "[param2]"
-			},
-			{"cont":"break"}
-
-		]
-	}]
+{ "service":"test", "action":[
+    {
+        "fn": "Arith",
+        "opr": "+",
+        "param1": "[param1]",
+		"param2": "[param2]",
+		"out":"ok"
+    },
+    {
+        "fn": "Arith",
+        "opr": "-",
+        "param1": "[param1]",
+		"param2": "[ok]",
+		"out":"ok"
+    },
+    {
+		"fn": "Arith",
+        "opr": "<",
+        "param1": "[param1]",
+		"param2": "[ok]",
+		"out":"ok"
+    },
+    {
+        "fn": "Break"
+    },
+    {
+        "fn": "Arith",
+        "opr": "+",
+        "param1": "[param1]",
+		"param2": "[ok]",
+		"out":"resp"
+	}
+]
 }

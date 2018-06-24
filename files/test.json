@@ -1,31 +1,34 @@
 { "service":"test", "action":[
     {
-        "id": "1",
-        "fn": "Add",
+        "fn": "Arith",
+        "opr": "+",
         "param1": "[param1]",
 		"param2": "[param2]",
 		"out":"ok"
     },
     {
-        "id": "2",
-        "fn": "Add",
+        "fn": "Arith",
+        "opr": "-",
         "param1": "[param1]",
 		"param2": "[ok]",
 		"out":"ok"
     },
     {
-		"id": "3",
-        "fn": "Add",
-		"param1": "[param1]",
+		"fn": "Arith",
+        "opr": "<",
+        "param1": "[param1]",
 		"param2": "[ok]",
-		"out":"ok"
+		"out":"resp"
     },
     {
-        "id": "4",
-        "fn": "Add",
-		"param1": "[param1]",
+        "fn": "Break"
+    },
+    {
+        "fn": "Arith",
+        "opr": "+",
+        "param1": "[param1]",
 		"param2": "[ok]",
-		"out":"ok"
+		"out":"resp"
 	}
 ]
 }
