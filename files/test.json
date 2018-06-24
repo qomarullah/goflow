@@ -19,6 +19,27 @@
         "param1": "[param1]",
 		"param2": "[ok]",
 		"out":"resp"
+    },{
+		"fn": "If",
+        "opr": "eq",
+        "param1": "10",
+        "param2": "10",
+        "true":[{
+            "fn": "Arith",
+            "opr": "+",
+            "param1": "[param1]",
+            "param2": "[param2]",
+            "out":"ok"
+        },
+        {
+            "fn": "Arith",
+            "opr": "-",
+            "param1": "[param1]",
+            "param2": "[ok]",
+            "out":"resp"
+        }
+            
+        ]
     },
     {
         "fn": "Break"

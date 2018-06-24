@@ -89,10 +89,9 @@ func (q *ServicesController) Services() {
 			task.Status = 1
 			field := flow.Action[i]
 			fmt.Println(field.ToString())
+			task.Step = i
 			fmt.Println("-----------------", i, "--------------------")
-
 			task = actions.Exec(i, field, task)
-
 			fmt.Println("RESULT", task, task.Status, task.Resp)
 			if task.Err != nil {
 				fmt.Println("EXIT", task.Step)

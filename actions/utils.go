@@ -13,12 +13,15 @@ type Fields struct {
 	Fn     string `json:"fn"`
 	Param1 string `json:"param1"`
 	Param2 string `json:"param2"`
-	Opr    string `json:"opr"`
-	Ds     string `json:"ds"`
-	Url    string `json:"url"`
-	Out    string `json:"out"`   //internal state
-	State  string `json:"state"` //internal state
+	Neg    string `json:"neg"`
 
+	Opr   string   `json:"opr"`
+	Ds    string   `json:"ds"`
+	Url   string   `json:"url"`
+	Out   string   `json:"out"`   //internal state
+	State string   `json:"state"` //internal state
+	True  []Fields `json:"true"`
+	False []Fields `json:"false"`
 }
 
 func ToJson(p interface{}) string {

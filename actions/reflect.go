@@ -14,7 +14,7 @@ type Task struct {
 	Resp   interface{}
 }
 
-func Invoke(m interface{}, name string, params ...interface{}) (resp []reflect.Value, err error) {
+/*func Invoke(m interface{}, name string, params ...interface{}) (resp []reflect.Value, err error) {
 	fmt.Println("masuk.....")
 	f := reflect.ValueOf(m)
 	fmt.Println("function", name)
@@ -35,15 +35,14 @@ func Invoke(m interface{}, name string, params ...interface{}) (resp []reflect.V
 	return
 
 }
+*/
 func Exec(step int, field Fields, task Task) Task {
 
-	//nextTask, err := Invoke(field, field.Fn, task)
-	//fmt.Println("-----------------", step, "--------------------")
 	task.Step = step
 	fn := field.Fn
 	f := reflect.ValueOf(field)
 	fmt.Println("function", fn)
-	fmt.Println("valuexxx", task, 1)
+	fmt.Println("value", task, 1)
 
 	if f.MethodByName(fn).IsValid() == false {
 
@@ -64,7 +63,7 @@ func Exec(step int, field Fields, task Task) Task {
 	task = resp[0].Interface().(Task)
 	//task = y
 	//y := reflect.ValueOf(resp[0]).Interface().(Task)
-	fmt.Println("invoke-res", task, task.Status)
+	fmt.Println("invoke-end", task, task.Status)
 
 	/*y := reflect.ValueOf(resp).Interface().([]reflect.Value)
 	z := y[0].Interface().(Task)
