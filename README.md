@@ -7,9 +7,10 @@ GoFlow is platform for build custom ordering flow based on predefined format JSO
  2. put parameter from request GET => done
  2. Call function by name from json => done:with simple add,sub 
  3. Define basic logic function :
- - Break
- - If
- - loop  
+ - Break => done
+ - If => done
+ - loop  => done
+ 
  4. Read and parse XML 
  5. Reload config from file/db and put in memmory 
  5. Define more function : 
