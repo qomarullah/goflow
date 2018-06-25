@@ -1,13 +1,17 @@
 package main
 
 import (
+	"fmt"
 	_ "goflow/routers"
+	"os"
 
 	"github.com/astaxie/beego"
+	_ "github.com/astaxie/beego/config"
 	"github.com/astaxie/beego/logs"
 )
 
 func main() {
+
 	//setup Log
 	logs.Async()
 	logFiles := beego.AppConfig.String("LogFiles")
@@ -24,4 +28,16 @@ func main() {
 
 	beego.Run()
 
+}
+
+func init() { //func init in main.go
+	//set file config
+	args := os.Args
+	if len(args) > 1 && args[1] != "" {
+		beego.LoadAppConfig("ini", args[1])
+
+	}
+
+	port, err := beego.AppConfig.Int("httpport")
+	fmt.Println("port", port, err)
 }

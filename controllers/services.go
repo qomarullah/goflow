@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"goflow/actions"
+	"goflow/lib"
 	"io/ioutil"
 	"reflect"
 	"strconv"
@@ -80,7 +80,7 @@ func (q *ServicesController) Services() {
 		json.Unmarshal([]byte(strflow), &flow)
 		i := 0
 		//for _, field := range flow.Action {
-		task := actions.Task{}
+		task := lib.Task{}
 		task.Info = infos //set hashmap container
 
 		valid := true
@@ -91,7 +91,7 @@ func (q *ServicesController) Services() {
 			fmt.Println(field.ToString())
 			task.Step = i
 			fmt.Println("-----------------", i, "--------------------")
-			task = actions.Exec(i, field, task)
+			task = lib.Exec(i, field, task)
 			fmt.Println("RESULT", task, task.Status, task.Resp)
 			if task.Err != nil {
 				fmt.Println("EXIT", task.Step)
@@ -134,11 +134,11 @@ func (q *ServicesController) Services() {
 
 type Page struct {
 	Service string `json:"service"`
-	Action  []actions.Fields
+	Action  []lib.Fields
 }
 
 func (p Page) pageToString() string {
-	return actions.ToJson(p)
+	return lib.ToJson(p)
 }
 
 func getPages(file string) (c Page, err error) {

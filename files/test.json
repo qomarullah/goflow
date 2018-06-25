@@ -7,6 +7,17 @@
 		"out":"ok"
     },
     {
+		"fn": "Go",
+        "true":[{
+            "fn": "Arith",
+            "opr": "+",
+            "param1": "[param1]",
+            "param2": "[param2]",
+            "out":"resp"
+        }   
+        ]
+    },
+    {
         "fn": "Arith",
         "opr": "-",
         "param1": "[param1]",
@@ -39,6 +50,31 @@
             "out":"resp"
         }
             
+        ]
+    },
+    {
+		"fn": "Loop",
+        "start": "0",
+        "end": "10",
+        "delay": "1",
+        "true":[{
+            "fn": "Arith",
+            "opr": "+",
+            "param1": "[param1]",
+            "param2": "[param2]",
+            "out":"resp"
+        }   
+        ]
+    },
+    {
+		"fn": "Go",
+        "true":[{
+            "fn": "Arith",
+            "opr": "+",
+            "param1": "[param1]",
+            "param2": "[param2]",
+            "out":"resp"
+        }   
         ]
     },
     {
