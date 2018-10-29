@@ -36,6 +36,7 @@ type Task struct {
 
 }
 */
+
 func Exec(step int, field Fields, task Task) Task {
 
 	task.Step = step
@@ -61,23 +62,37 @@ func Exec(step int, field Fields, task Task) Task {
 
 	resp := f.MethodByName(fn).Call(inputs)
 	task = resp[0].Interface().(Task)
-	//task = y
-	//y := reflect.ValueOf(resp[0]).Interface().(Task)
 	fmt.Println("invoke-end", task, task.Status)
 
-	/*y := reflect.ValueOf(resp).Interface().([]reflect.Value)
-	z := y[0].Interface().(Task)
-	fmt.Println("invoke", z)
-
-	if z.Err != nil {
-		z.Status = -1
-
-	}
-	task = z
-	*/
 	return task
 }
 
-//func Populate(task Fields) Fields {
+func ExecXML(step int, field FieldsXML, task Task) Task {
 
-//}
+	task.Step = step
+	fn := field.Fn
+	f := reflect.ValueOf(field)
+	fmt.Println("function", fn)
+	fmt.Println("value", task, 1)
+
+	if f.MethodByName(fn).IsValid() == false {
+
+		err := errors.New("Function not found")
+		task.Status = -2
+		task.Err = err
+		return task
+	}
+	inputs := make([]reflect.Value, 1)
+	/*for i, _ := range params {
+		inputs[i] = reflect.ValueOf(task)
+	}
+	*/
+	inputs[0] = reflect.ValueOf(task)
+	fmt.Println("invoke-start", task)
+
+	resp := f.MethodByName(fn).Call(inputs)
+	task = resp[0].Interface().(Task)
+	fmt.Println("invoke-end", task, task.Status)
+
+	return task
+}

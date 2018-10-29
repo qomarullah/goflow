@@ -302,39 +302,10 @@ func (f Fields) Go(task Task) Task {
 			time.Sleep(time.Duration(delay) * time.Second)
 		}
 
-		/*fmt.Println("RESULT-GO", task, task.Status, task.Resp)
-		if task.Err != nil {
-			fmt.Println("EXIT-GO-ERR", task.Step)
-			break
-		}
-
-		if task.Status == 1 {
-
-		} else if task.Status == 10 {
-			valid = false
-			i = len(next)
-			fmt.Println("BREAK-GO")
-
-		} else {
-			task.Status = 0
-			fmt.Println("EXIT-GO", task.Step)
-			break
-		}
-		*/
-
 	}
 	task.Status = 1
 	fmt.Println("FINISH-GO")
 	fmt.Println("RESULT-GO", task, task.Status, task.Resp)
 
-	return task
-}
-
-func CheckErr(err error, task Task) Task {
-	if err != nil {
-		task.Err = err
-		task.Status = -3
-		return task
-	}
 	return task
 }

@@ -1,0 +1,12 @@
+<Service>
+    <go fn="Set" var="resp" val="ini adalah tes"/>
+    <go fn="Arith" opr="*" param1="[param1]" param2="100" out="resp"/>
+    <go fn="If" opr=">" param1="[resp]" param2="0">
+        <go fn="Set" var="resp" val="ini adalah out dari if"/>
+        <go fn="Set" var="resp" val="ini adalah out dari if"/>
+        <go fn="Set" var="resp" val="ini adalah out dari if"/>
+        <go fn="Set" var="resp" val="ini adalah out dari if 2"/>
+        <go fn="If" opr=">" param1="10" param2="0">
+            <go fn="Set" var="resp" val="ini adalah out dari if 3"/></go>
+    o</go>
+</Service>

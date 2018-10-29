@@ -47,7 +47,7 @@ func (q *QueryController) Select() {
 
 	for i := 0; i < len(keys); i++ {
 		strkeys[i] = keys[i].String()
-		query = strings.Replace(query, "["+strkeys[i]+"]", mymap[strkeys[i]][0], 5)
+		query = strings.Replace(query, "["+strkeys[i]+"]", mymap[strkeys[i]][0], -1)
 		//fmt.Println(strkeys[i], "==>", mymap[strkeys[i]][0])
 		//fmt.Println("query1:", query)
 
